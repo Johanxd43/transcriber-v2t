@@ -1,6 +1,7 @@
 import subprocess
 from typing import Optional
 
+
 class Transcriber:
     def __init__(self, model):
         """
@@ -16,13 +17,19 @@ class Transcriber:
         if model_identifier == "whisper":
             try:
                 from whisper import load_model
-                model = load_model("base")  # Puedes elegir entre diferentes versiones del modelo Whisper aquí.
-            except ImportError:
-                raise ImportError("No se pudo importar el módulo Whisper. Asegúrate de que esté instalado.")
-        else:
-            raise ValueError(f"Modelo de transcripción '{model_identifier}' no soportado.")
-        return model
 
+                model = load_model(
+                    "base"
+                )  # Puedes elegir entre diferentes versiones del modelo Whisper aquí.
+            except ImportError:
+                raise ImportError(
+                    "No se pudo importar el módulo Whisper. Asegúrate de que esté instalado."
+                )
+        else:
+            raise ValueError(
+                f"Modelo de transcripción '{model_identifier}' no soportado."
+            )
+        return model
 
     def extract_audio(self, video_path: str, audio_path: Optional[str] = None) -> str:
         """
@@ -32,9 +39,21 @@ class Transcriber:
         :return: Ruta al archivo de audio extraído.
         """
         if audio_path is None:
-            audio_path = video_path.rsplit('.', 1)[0] + '.wav'
+            audio_path = video_path.rsplit(".", 1)[0] + ".wav"
         # Usar FFmpeg para extraer audio. Asegúrate de que FFmpeg esté instalado y disponible en el PATH.
-        subprocess.run(['ffmpeg', '-i', video_path, '-acodec', 'pcm_s16le', '-ar', '16000', audio_path], check=True)
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-i",
+                video_path,
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                audio_path,
+            ],
+            check=True,
+        )
         return audio_path
 
     def transcribe(self, audio_path: str) -> str:
